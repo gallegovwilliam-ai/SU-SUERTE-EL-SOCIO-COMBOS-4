@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rifas El Socio - Combos de 4 Números</title>
+  <style>
+    :root {
+      --gold-primary: #f59e0b;
+      --gold-light: #fbbf24;
+      --gold-dark: #b45309;
+      --bg-dark: #0f172a;
+      --card-bg: #1e293b;
+      --text-light: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-gold: #d97706;
+      --danger: #ef4444;
+      --success: #22c55e;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px 10px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 650px;
+      background: var(--card-bg);
+      border-radius: 20px;
+      border: 2px solid var(--border-gold);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      text-align: center;
+      padding: 25px 20px;
+      border-bottom: 2px solid var(--border-gold);
+    }
+
+    .logo-container {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 15px auto;
+      border-radius: 50%;
+      border: 3px solid var(--gold-primary);
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+      overflow: hidden;
+      background-color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .title {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--gold-light);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 5px;
+    }
+
+    .content {
+      padding: 25px;
+    }
+
+    /* BARRA DE PROGRESO DE SELECCIÓN (ESTRICTO 4 NÚMEROS) */
+    .progress-box {
+      background: #0f172a;
+      border: 1px solid var(--border-gold);
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .progress-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--gold-light);
+      margin-bottom: 8px;
+    }
+
+    .progress-bar-bg {
+      background: #334155;
+      height: 14px;
+      border-radius: 7px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .progress-bar-fill {
+      background: linear-gradient(90deg, var(--gold-dark), var(--gold-primary));
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .alert-banner {
+      font-size: 13px;
+      font-weight: 700;
+      padding: 8px;
+      border-radius: 6px;
+      display: none;
+    }
+
+    .alert-warning {
+      background: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+      border: 1px solid var(--danger);
+    }
+
+    .alert-complete {
+      background: rgba(34, 197, 94, 0.2);
+      color: #86efac;
+      border: 1px solid var(--success);
+    }
+
+    /* Malla de números de ejemplo */
+    .numbers-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+      max-height: 180px;
+      overflow-y: auto;
+      padding-right: 5px;
+    }
+
+    .num-card {
+      background: #0f172a;
+      border: 1px solid #334155;
+      color: var(--text-light);
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 700;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s;
+    }
+
+    .num-card.selected {
+      background: var(--gold-primary);
+      color: #000;
+      border-color: var(--gold-light);
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+    }
+
+    .num-card.sold {
+      background: #334155;
+      color: #64748b;
+      cursor: not-allowed;
+      text-decoration: line-through;
+    }
+
+    /* CAMPOS DE DATOS */
+    .form-box {
+      background: #0f172a;
+      border: 1px dashed var(--border-gold);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 25px;
+    }
+
+    .form-box h3 {
+      color: var(--gold-light);
+      font-size: 15px;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+    }
+
+    .input-group {
+      margin-bottom: 12px;
+      text-align: left;
+    }
+
+    .input-group label {
+      display: block;
+      color: var(--gold-light);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border-gold);
+      background-color: #1e293b;
+      color: var(--text-light);
+      font-size: 14px;
+      outline: none;
+    }
+
+    .template-text {
+      font-family: monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text-light);
+      white-space: pre-wrap;
+      background: #090d16;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #334155;
+      margin-top: 10px;
+    }
+
+    /* BOTONES DE ACCIÓN */
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+    }
+
+    .btn-quick {
+      grid-column: span 2;
+      background: linear-gradient(90deg, var(--gold-dark), var(--gold-primary));
+      color: #000;
+      margin-bottom: 10px;
+    }
+
+    .btn-copy {
+      background: #334155;
+      color: var(--text-light);
+      border: 1px solid var(--border-gold);
+    }
+
+    .btn-ws {
+      background: var(--success);
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      <div class="logo-container">
+        <img src="logo.png" onerror="this.onerror=null; this.src='logo.jpg';" alt="Logo Su Suerte El Socio">
+      </div>
+      <h1 class="title">Rifas El Socio - Combos 4</h1>
+      <p class="subtitle">Selecciona exactamente 4 números por boleta</p>
+    </div>
+
+    <div class="content">
+      <!-- Indicador Estricto de 4 Números -->
+      <div class="progress-box">
+        <div class="progress-title" id="progressText">Seleccionados: 0 / 4 números</div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progressBar"></div>
+        </div>
+        <div id="alertBanner" class="alert-banner alert-warning" style="display: block;">
+          ⚠️ ¡Atención! Debes completar 4 números para poder enviar.
+        </div>
+      </div>
+
+      <!-- Botón de Generación Rápida de Combos -->
+      <button class="btn btn-quick" onclick="generarComboAleatorio()">
+        🎲 Combo Rápido (4 Números Aleatorios)
+      </button>
+
+      <!-- Malla de Números Interactivas -->
+      <div class="numbers-grid" id="gridNumeros">
+        <!-- Se generan automáticamente vía JavaScript -->
+      </div>
+
+      <!-- Formulario de Datos -->
+      <div class="form-box">
+        <h3>✍️ DATOS DE REGISTRO DEL CLIENTE</h3>
+
+        <div class="input-group">
+          <label for="nombre">💎 Nombre Completo:</label>
+          <input type="text" id="nombre" placeholder="Ej. Juan Pérez" oninput="actualizarTexto()">
+        </div>
+
+        <div class="input-group">
+          <label for="ciudad">💎 Ciudad:</label>
+          <input type="text" id="ciudad" placeholder="Ej. La Paz" oninput="actualizarTexto()">
+        </div>
+
+        <div class="input-group">
+          <label for="telefono">💎 Teléfono / WhatsApp:</label>
+          <input type="tel" id="telefono" placeholder="Ej. 67723609" oninput="actualizarTexto()">
+        </div>
+
+        <div style="font-size: 12px; color: var(--text-muted); margin-top: 10px;">Vista previa del mensaje:</div>
+        <div class="template-text" id="wsText">✍️ Registro de Combo Rápido</div>
+      </div>
+
+      <!-- Botones de Envío -->
+      <div class="actions">
+        <button class="btn btn-copy" onclick="copiarTexto()">
+          📋 Copiar Texto
+        </button>
+        <button class="btn btn-ws" onclick="enviarWhatsApp()">
+          💬 Enviar a WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbzcZRtZ4gAB4EMwUZtV104dZevHuRkMcxjYYLeVQU1OFk4d5yzmZW0VSWbOz/exec";
+    let numerosSeleccionados = [];
+    
+    // Lista de muestra inicial
+    const listaDemo = ["1024", "3052", "4108", "5512", "6809", "7211", "8430", "9105", "1122", "3344", "5566", "7788"];
+
+    function renderGrid() {
+      const grid = document.getElementById('gridNumeros');
+      grid.innerHTML = '';
+      
+      listaDemo.forEach(num => {
+        const card = document.createElement('div');
+        card.className = 'num-card' + (numerosSeleccionados.includes(num) ? ' selected' : '');
+        card.innerText = num;
+        card.onclick = () => seleccionarNumero(num);
+        grid.appendChild(card);
+      });
+    }
+
+    function seleccionarNumero(num) {
+      if (numerosSeleccionados.includes(num)) {
+        numerosSeleccionados = numerosSeleccionados.filter(n => n !== num);
+      } else {
+        if (numerosSeleccionados.length >= 4) {
+          alert("⚠️ Ya has seleccionado 4 números. Para cambiar uno, deselecciona uno primero.");
+          return;
+        }
+        numerosSeleccionados.push(num);
+      }
+      actualizarProgreso();
+      renderGrid();
+    }
+
+    function generarComboAleatorio() {
+      // Tomar 4 números al azar
+      const copia = [...listaDemo];
+      copia.sort(() => 0.5 - Math.random());
+      numerosSeleccionados = copia.slice(0, 4);
+      actualizarProgreso();
+      renderGrid();
+    }
+
+    function actualizarProgreso() {
+      const cantidad = numerosSeleccionados.length;
+      const porcentaje = (cantidad / 4) * 100;
+      
+      document.getElementById('progressBar').style.width = porcentaje + '%';
+      document.getElementById('progressText').innerText = `Seleccionados: ${cantidad} / 4 números`;
+
+      const banner = document.getElementById('alertBanner');
+      if (cantidad === 4) {
+        banner.className = "alert-banner alert-complete";
+        banner.innerText = "✅ ¡COMBO COMPLETO! Ya puedes realizar el envío.";
+        banner.style.display = "block";
+      } else {
+        banner.className = "alert-banner alert-warning";
+        banner.innerText = `⚠️ Te faltan ${4 - cantidad} números para completar tu boleta.`;
+        banner.style.display = "block";
+      }
+
+      actualizarTexto();
+    }
+
+    function actualizarTexto() {
+      const nombre = document.getElementById('nombre').value || '';
+      const ciudad = document.getElementById('ciudad').value || '';
+      const telefono = document.getElementById('telefono').value || '';
+      const comboStr = numerosSeleccionados.length > 0 ? numerosSeleccionados.join(' - ') : 'Ninguno';
+
+      const mensaje = `✍️ REGISTRO DE COMBO (4 NÚMEROS):
+
+🎟️ Combo Seleccionado: [ ${comboStr} ]
+
+💎 Nombre: ${nombre}
+💎 Ciudad: ${ciudad}
+💎 Teléfono: ${telefono}
+
+💳 Medio de Pago: Banco Ganadero (QR)
+📲 Contacto: +591 6772 3609`;
+
+      document.getElementById('wsText').innerText = mensaje;
+    }
+
+    async function registrarEnAPI() {
+      const nombre = document.getElementById('nombre').value;
+      const ciudad = document.getElementById('ciudad').value;
+      const telefono = document.getElementById('telefono').value;
+      const comboStr = numerosSeleccionados.join(',');
+
+      const url = `${API_URL}?action=sellCombo&numeros=${encodeURIComponent(comboStr)}&cliente=${encodeURIComponent(nombre)}&ciudad=${encodeURIComponent(ciudad)}&telefono=${encodeURIComponent(telefono)}`;
+      
+      try {
+        await fetch(url, { method: "GET", mode: "no-cors" });
+      } catch (e) {
+        console.log("Envío procesado a API");
+      }
+    }
+
+    function validarEnvio() {
+      if (numerosSeleccionados.length !== 4) {
+        alert("🚨 ¡ATENCIÓN! Debes seleccionar exactamente 4 números para poder completar el registro.");
+        return false;
+      }
+      return true;
+    }
+
+    function copiarTexto() {
+      if (!validarEnvio()) return;
+      
+      const texto = document.getElementById('wsText').innerText;
+      navigator.clipboard.writeText(texto).then(() => {
+        alert('¡Texto del combo copiado con éxito!');
+        registrarEnAPI();
+      });
+    }
+
+    function enviarWhatsApp() {
+      if (!validarEnvio()) return;
+
+      registrarEnAPI();
+      const texto = document.getElementById('wsText').innerText;
+      window.open(`https://wa.me/59167723609?text=${encodeURIComponent(texto)}`, '_blank');
+    }
+
+    // Inicializar
+    renderGrid();
+    actualizarProgreso();
+  </script>
+</body>
+</html>
