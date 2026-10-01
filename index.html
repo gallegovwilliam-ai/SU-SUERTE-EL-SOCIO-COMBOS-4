@@ -1,583 +1,129 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rifas El Socio - Combos de 4 Números</title>
-  <style>
-    :root {
-      --gold-primary: #f59e0b;
-      --gold-light: #fbbf24;
-      --gold-dark: #b45309;
-      --bg-dark: #0f172a;
-      --card-bg: #1e293b;
-      --text-light: #f8fafc;
-      --text-muted: #94a3b8;
-      --border-gold: #d97706;
-      --danger: #ef4444;
-      --success: #22c55e;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    }
-
-    body {
-      background-color: var(--bg-dark);
-      color: var(--text-light);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px 10px;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 700px;
-      background: var(--card-bg);
-      border-radius: 20px;
-      border: 2px solid var(--border-gold);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      overflow: hidden;
-    }
-
-    .header {
-      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-      text-align: center;
-      padding: 25px 20px;
-      border-bottom: 2px solid var(--border-gold);
-    }
-
-    .logo-container {
-      width: 110px;
-      height: 110px;
-      margin: 0 auto 15px auto;
-      border-radius: 50%;
-      border: 3px solid var(--gold-primary);
-      box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
-      overflow: hidden;
-      background-color: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .logo-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .title {
-      font-size: 24px;
-      font-weight: 800;
-      color: var(--gold-light);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .subtitle {
-      font-size: 14px;
-      color: var(--text-muted);
-      margin-top: 5px;
-    }
-
-    .content {
-      padding: 25px;
-    }
-
-    /* BARRA DE PROGRESO DE MULTI-COMBOS */
-    .progress-box {
-      background: #0f172a;
-      border: 1px solid var(--border-gold);
-      border-radius: 12px;
-      padding: 15px;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    .progress-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--gold-light);
-      margin-bottom: 8px;
-    }
-
-    .progress-bar-bg {
-      background: #334155;
-      height: 14px;
-      border-radius: 7px;
-      overflow: hidden;
-      margin-bottom: 10px;
-    }
-
-    .progress-bar-fill {
-      background: linear-gradient(90deg, var(--gold-dark), var(--gold-primary));
-      height: 100%;
-      width: 0%;
-      transition: width 0.3s ease;
-    }
-
-    .alert-banner {
-      font-size: 13px;
-      font-weight: 700;
-      padding: 8px;
-      border-radius: 6px;
-    }
-
-    .alert-warning {
-      background: rgba(239, 68, 68, 0.2);
-      color: #fca5a5;
-      border: 1px solid var(--danger);
-    }
-
-    .alert-complete {
-      background: rgba(34, 197, 94, 0.2);
-      color: #86efac;
-      border: 1px solid var(--success);
-    }
-
-    /* CONTROLES RÁPIDOS */
-    .quick-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-
-    .btn-quick {
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 13px;
-      cursor: pointer;
-      background: linear-gradient(90deg, var(--gold-dark), var(--gold-primary));
-      color: #000;
-      transition: transform 0.2s;
-    }
-
-    .btn-quick:hover {
-      transform: translateY(-2px);
-    }
-
-    /* MALLA DE NÚMEROS EXTENDIDA */
-    .numbers-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .numbers-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin-bottom: 20px;
-      max-height: 280px;
-      overflow-y: auto;
-      padding-right: 5px;
-      border: 1px solid #334155;
-      padding: 10px;
-      border-radius: 10px;
-      background: #090d16;
-    }
-
-    .num-card {
-      background: #0f172a;
-      border: 1px solid #334155;
-      color: var(--text-light);
-      padding: 10px;
-      border-radius: 8px;
-      text-align: center;
-      font-weight: 700;
-      cursor: pointer;
-      user-select: none;
-      transition: all 0.2s;
-    }
-
-    .num-card.selected {
-      background: var(--gold-primary);
-      color: #000;
-      border-color: var(--gold-light);
-      box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
-    }
-
-    .num-card.sold {
-      background: #334155;
-      color: #64748b;
-      cursor: not-allowed;
-      text-decoration: line-through;
-    }
-
-    /* FORMULARIO DE REGISTRO */
-    .form-box {
-      background: #0f172a;
-      border: 1px dashed var(--border-gold);
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 25px;
-    }
-
-    .form-box h3 {
-      color: var(--gold-light);
-      font-size: 15px;
-      margin-bottom: 15px;
-      text-transform: uppercase;
-    }
-
-    .input-group {
-      margin-bottom: 12px;
-      text-align: left;
-    }
-
-    .input-group label {
-      display: block;
-      color: var(--gold-light);
-      font-size: 13px;
-      font-weight: 700;
-      margin-bottom: 5px;
-    }
-
-    .input-group input {
-      width: 100%;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid var(--border-gold);
-      background-color: #1e293b;
-      color: var(--text-light);
-      font-size: 14px;
-      outline: none;
-    }
-
-    .template-text {
-      font-family: monospace;
-      font-size: 13px;
-      line-height: 1.6;
-      color: var(--text-light);
-      white-space: pre-wrap;
-      background: #090d16;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid #334155;
-      margin-top: 10px;
-    }
-
-    /* BOTONES DE ENVÍO */
-    .actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .btn {
-      padding: 14px;
-      border: none;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 14px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: transform 0.2s, opacity 0.2s;
-    }
-
-    .btn:hover {
-      opacity: 0.9;
-      transform: translateY(-2px);
-    }
-
-    .btn-copy {
-      background: #334155;
-      color: var(--text-light);
-      border: 1px solid var(--border-gold);
-    }
-
-    .btn-ws {
-      background: var(--success);
-      color: #fff;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Su Suerte El Socio - Mega Combo Bolivia</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome para Íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="bg-dark text-white">
 
-  <div class="container">
-    <div class="header">
-      <div class="logo-container">
-        <img src="logo.png" onerror="this.onerror=null; this.src='logo.jpg';" alt="Logo Su Suerte El Socio">
-      </div>
-      <h1 class="title">Rifas El Socio - Combos 4</h1>
-      <p class="subtitle">Venta exclusiva en grupos de 4 números por combo</p>
-    </div>
-
-    <div class="content">
-      <!-- Indicador Dinámico de Múltiples Combos -->
-      <div class="progress-box">
-        <div class="progress-title" id="progressText">Seleccionados: 0 números (0 Combos)</div>
-        <div class="progress-bar-bg">
-          <div class="progress-bar-fill" id="progressBar"></div>
+    <!-- NAVBAR / ENCABEZADO -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-black px-4 py-2 border-bottom border-warning">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold text-warning d-flex align-items-center gap-2" href="#">
+                <i class="fa-solid fa-crown text-warning fs-3"></i>
+                <div>
+                    <span class="d-block lh-1 text-white fs-5">SU SUERTE</span>
+                    <span class="d-block lh-1 text-warning fs-6">EL SOCIO</span>
+                </div>
+            </a>
+            <div class="d-none d-md-flex gap-3">
+                <a href="#" class="nav-link text-white active">Inicio</a>
+                <a href="#" class="nav-link text-secondary">Cómo Participar</a>
+                <a href="#" class="nav-link text-secondary">Resultados</a>
+                <a href="#" class="nav-link text-secondary">Ganadores</a>
+                <a href="#" class="nav-link text-secondary">Contacto</a>
+            </div>
+            <a href="https://wa.me/59167723609" target="_blank" class="btn btn-outline-success rounded-pill btn-sm text-white px-3">
+                <i class="fa-brands fa-whatsapp"></i> Escríbenos por WhatsApp
+            </a>
         </div>
-        <div id="alertBanner" class="alert-banner alert-warning">
-          ⚠️ Selecciona al menos 4 números para armar tu primer combo.
+    </nav>
+
+    <!-- BANNER DE ENCABEZADO CON IMAGEN DE FONDO -->
+    <header class="banner-header text-center py-5">
+        <div class="container py-4">
+            <h1 class="display-3 fw-black text-warning text-uppercase glow-text mb-0">MEGA COMBO BOLIVIA</h1>
+            <p class="fs-5 text-light opacity-90">Tu número. Tu momento. Tu suerte.</p>
+            <div class="d-flex justify-content-center gap-2 flex-wrap mt-3">
+                <span class="badge bg-dark border border-secondary px-3 py-2"><i class="fa-solid fa-car"></i> AUTOMÓVILES</span>
+                <span class="badge bg-dark border border-secondary px-3 py-2"><i class="fa-solid fa-motorcycle"></i> MOTOCICLETAS</span>
+                <span class="badge bg-dark border border-secondary px-3 py-2"><i class="fa-solid fa-mobile-screen"></i> CELULARES</span>
+                <span class="badge bg-dark border border-secondary px-3 py-2"><i class="fa-solid fa-gift"></i> Y MUCHO MÁS</span>
+            </div>
         </div>
-      </div>
+    </header>
 
-      <!-- Acciones de Selección Rápida de Combos -->
-      <div class="quick-actions">
-        <button class="btn-quick" onclick="agregarComboAleatorio(1)">
-          🎲 +1 Combo (4 Números)
-        </button>
-        <button class="btn-quick" onclick="agregarComboAleatorio(2)">
-          🎲🎲 +2 Combos (8 Números)
-        </button>
-      </div>
+    <!-- PANEL PRINCIPAL (GRILLA + FORMULARIO) -->
+    <main class="container my-4">
+        <div class="row g-4">
+            
+            <!-- SECCIÓN IZQUIERDA: MATRIZ DE NÚMEROS -->
+            <div class="col-lg-8">
+                <div class="card bg-dark border-secondary text-white p-3 shadow-lg rounded-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0 text-warning"><i class="fa-solid fa-bullseye"></i> Elige tus números para participar</h4>
+                    </div>
 
-      <div class="numbers-header">
-        <span style="font-size: 13px; color: var(--gold-light); font-weight: bold;">Lista de Números Disponibles:</span>
-        <button onclick="limpiarSeleccion()" style="background: none; border: none; color: var(--danger); font-size: 12px; cursor: pointer; text-decoration: underline;">Limpiar Selección</button>
-      </div>
+                    <!-- LEYENDA ESTADOS -->
+                    <div class="d-flex gap-3 mb-3 small align-items-center">
+                        <span class="d-flex align-items-center gap-1"><i class="fa-solid fa-circle text-success"></i> Disponible</span>
+                        <span class="d-flex align-items-center gap-1"><i class="fa-solid fa-circle text-warning"></i> Seleccionado</span>
+                        <span class="d-flex align-items-center gap-1"><i class="fa-solid fa-circle text-danger"></i> Ocupado</span>
+                    </div>
 
-      <!-- Malla Extendida de Números -->
-      <div class="numbers-grid" id="gridNumeros">
-        <!-- Generado dinámicamente -->
-      </div>
+                    <!-- GRILLA DE NÚMEROS DE TU GOOGLE SHEET -->
+                    <div id="gridContainer" class="d-flex flex-wrap justify-content-center gap-2 py-2">
+                        <!-- Carga dinámica vía app.js -->
+                    </div>
+                </div>
+            </div>
 
-      <!-- Formulario de Registro -->
-      <div class="form-box">
-        <h3>✍️ DATOS DE REGISTRO DEL CLIENTE</h3>
+            <!-- SECCIÓN DERECHA: FORMULARIO Y RESUMEN -->
+            <div class="col-lg-4">
+                <div class="card bg-dark border-secondary text-white p-3 shadow-lg rounded-4">
+                    <h5 class="text-warning mb-1"><i class="fa-solid fa-user-pen"></i> Completa tus datos</h5>
+                    <p class="small text-secondary mb-3">Revisa que tus datos sean correctos para continuar.</p>
 
-        <div class="input-group">
-          <label for="nombre">💎 Nombre Completo:</label>
-          <input type="text" id="nombre" placeholder="Ej. Juan Pérez" oninput="actualizarTexto()">
+                    <div class="mb-2">
+                        <label class="form-label small text-secondary">Nombre completo</label>
+                        <input type="text" id="txtNombre" class="form-control bg-black text-white border-secondary" placeholder="Ej. Juan Pérez">
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label small text-secondary">Ciudad</label>
+                        <input type="text" id="txtCiudad" class="form-control bg-black text-white border-secondary" placeholder="Ej. La Paz">
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label small text-secondary">Teléfono / WhatsApp</label>
+                        <input type="tel" id="txtTelefono" class="form-control bg-black text-white border-secondary" placeholder="Ej. 71234567">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small text-secondary">Método de pago</label>
+                        <select id="selectPago" class="form-select bg-black text-white border-secondary">
+                            <option value="Banco Ganadero (QR)">Banco Ganadero (QR)</option>
+                            <option value="Tigo Money">Tigo Money</option>
+                            <option value="Efectivo / Transferencia">Efectivo / Transferencia</option>
+                        </select>
+                    </div>
+
+                    <!-- RESUMEN DE SELECCIONADOS -->
+                    <div class="p-2 border border-secondary rounded-3 bg-black mb-3">
+                        <div class="d-flex justify-content-between small text-secondary mb-2">
+                            <span>Números seleccionados:</span>
+                            <span id="countSeleccionados" class="badge bg-warning text-dark">0</span>
+                        </div>
+                        <div id="listaSeleccionadosBadges" class="d-flex flex-wrap gap-1">
+                            <!-- Badges amarillos -->
+                        </div>
+                    </div>
+
+                    <!-- BOTÓN WHATSAPP -->
+                    <button id="btnEnviarWhatsApp" onclick="enviarYGuardarEnGoogleSheets()" class="btn btn-warning w-100 fw-bold py-2 text-dark rounded-3">
+                        <i class="fa-brands fa-whatsapp fs-5 me-1"></i> Confirmar participación por WhatsApp →
+                    </button>
+                </div>
+            </div>
+
         </div>
+    </main>
 
-        <div class="input-group">
-          <label for="ciudad">💎 Ciudad:</label>
-          <input type="text" id="ciudad" placeholder="Ej. La Paz" oninput="actualizarTexto()">
-        </div>
-
-        <div class="input-group">
-          <label for="telefono">💎 Teléfono / WhatsApp:</label>
-          <input type="tel" id="telefono" placeholder="Ej. 67723609" oninput="actualizarTexto()">
-        </div>
-
-        <div style="font-size: 12px; color: var(--text-muted); margin-top: 10px;">Vista previa del mensaje:</div>
-        <div class="template-text" id="wsText">✍️ Registro de Pedido</div>
-      </div>
-
-      <!-- Botones de Acción -->
-      <div class="actions">
-        <button class="btn btn-copy" onclick="copiarTexto()">
-          📋 Copiar Texto
-        </button>
-        <button class="btn btn-ws" onclick="enviarWhatsApp()">
-          💬 Enviar a WhatsApp
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbzcZRtZ4gAB4EMwUZtV104dZevHuRkMcxjYYLeVQU1OFk4d5yzmZW0VSWbOz/exec";
-    let numerosSeleccionados = [];
-    let inventarioNumeros = {};
-
-    // Lista amplia inicial por defecto
-    let listaDisponible = [
-      "1024", "1025", "1026", "1027", "2048", "2049", "2050", "2051",
-      "3052", "3053", "3054", "3055", "4108", "4109", "4110", "4111",
-      "5512", "5513", "5514", "5515", "6809", "6810", "6811", "6812",
-      "7211", "7212", "7213", "7214", "8430", "8431", "8432", "8433",
-      "9105", "9106", "9107", "9108", "1122", "1123", "1124", "1125"
-    ];
-
-    async function cargarNumerosDesdeAPI() {
-      try {
-        const response = await fetch(`${API_URL}?action=getNumbers`);
-        const data = await response.json();
-        if (data && typeof data === 'object') {
-          inventarioNumeros = data;
-          listaDisponible = Object.keys(data);
-        }
-      } catch (e) {
-        console.log("Usando lista local predeterminada");
-      }
-      renderGrid();
-    }
-
-    function renderGrid() {
-      const grid = document.getElementById('gridNumeros');
-      grid.innerHTML = '';
-      
-      listaDisponible.forEach(num => {
-        const card = document.createElement('div');
-        const estado = inventarioNumeros[num] || 'disponible';
-        const esVendido = estado === 'vendido';
-
-        card.className = 'num-card' + 
-          (numerosSeleccionados.includes(num) ? ' selected' : '') +
-          (esVendido ? ' sold' : '');
-          
-        card.innerText = num;
-
-        if (!esVendido) {
-          card.onclick = () => seleccionarNumero(num);
-        }
-        
-        grid.appendChild(card);
-      });
-    }
-
-    function seleccionarNumero(num) {
-      if (numerosSeleccionados.includes(num)) {
-        numerosSeleccionados = numerosSeleccionados.filter(n => n !== num);
-      } else {
-        numerosSeleccionados.push(num);
-      }
-      actualizarProgreso();
-      renderGrid();
-    }
-
-    function agregarComboAleatorio(cantidadCombos) {
-      const numerosRequeridos = cantidadCombos * 4;
-      const disponibles = listaDisponible.filter(n => !numerosSeleccionados.includes(n) && inventarioNumeros[n] !== 'vendido');
-      
-      if (disponibles.length < numerosRequeridos) {
-        alert("⚠️ No hay suficientes números disponibles para agregar esa cantidad de combos.");
-        return;
-      }
-
-      disponibles.sort(() => 0.5 - Math.random());
-      const nuevos = disponibles.slice(0, numerosRequeridos);
-      numerosSeleccionados = [...numerosSeleccionados, ...nuevos];
-
-      actualizarProgreso();
-      renderGrid();
-    }
-
-    function limpiarSeleccion() {
-      numerosSeleccionados = [];
-      actualizarProgreso();
-      renderGrid();
-    }
-
-    function actualizarProgreso() {
-      const total = numerosSeleccionados.length;
-      const combosCompletos = Math.floor(total / 4);
-      const sobrantes = total % 4;
-      const faltantes = sobrantes === 0 ? 0 : 4 - sobrantes;
-
-      document.getElementById('progressText').innerText = `Seleccionados: ${total} números (${combosCompletos} Combo${combosCompletos !== 1 ? 's' : ''} Completo${combosCompletos !== 1 ? 's' : ''})`;
-
-      const banner = document.getElementById('alertBanner');
-      const progressBar = document.getElementById('progressBar');
-
-      if (total === 0) {
-        progressBar.style.width = '0%';
-        banner.className = "alert-banner alert-warning";
-        banner.innerText = "⚠️ Selecciona al menos 4 números para armar tu primer combo.";
-      } else if (sobrantes === 0) {
-        progressBar.style.width = '100%';
-        banner.className = "alert-banner alert-complete";
-        banner.innerText = `✅ ¡EXCELENTE! Tienes ${combosCompletos} combo(s) completo(s) de 4 números.`;
-      } else {
-        const porcentaje = (sobrantes / 4) * 100;
-        progressBar.style.width = porcentaje + '%';
-        banner.className = "alert-banner alert-warning";
-        banner.innerText = `⚠️ Te faltan ${faltantes} número(s) para completar el Combo #${combosCompletos + 1}.`;
-      }
-
-      actualizarTexto();
-    }
-
-    function actualizarTexto() {
-      const nombre = document.getElementById('nombre').value || '';
-      const ciudad = document.getElementById('ciudad').value || '';
-      const telefono = document.getElementById('telefono').value || '';
-      
-      const total = numerosSeleccionados.length;
-      const combosCompletos = Math.floor(total / 4);
-
-      // Agrupar visualmente de a 4 números por combo
-      let combosDetalle = '';
-      for (let i = 0; i < total; i += 4) {
-        const grupo = numerosSeleccionados.slice(i, i + 4);
-        combosDetalle += `\n   • Combo #${(i/4)+1}: [ ${grupo.join(' - ')} ]`;
-      }
-
-      if (total === 0) combosDetalle = '\n   • Ninguno';
-
-      const mensaje = `✍️ REGISTRO DE PEDIDO (RIFAS EL SOCIO):
-
-🎟️ Total Combos: ${combosCompletos} (${total} números)
-📋 Detalle de Combos:${combosDetalle}
-
-💎 Nombre: ${nombre}
-💎 Ciudad: ${ciudad}
-💎 Teléfono: ${telefono}
-
-💳 Medio de Pago: Banco Ganadero (QR)
-📲 Contacto: +591 6772 3609`;
-
-      document.getElementById('wsText').innerText = mensaje;
-    }
-
-    async function registrarEnAPI() {
-      const nombre = document.getElementById('nombre').value;
-      const ciudad = document.getElementById('ciudad').value;
-      const telefono = document.getElementById('telefono').value;
-      const comboStr = numerosSeleccionados.join(',');
-
-      const url = `${API_URL}?action=sellCombo&numeros=${encodeURIComponent(comboStr)}&cliente=${encodeURIComponent(nombre)}&ciudad=${encodeURIComponent(ciudad)}&telefono=${encodeURIComponent(telefono)}`;
-      
-      try {
-        await fetch(url, { method: "GET", mode: "no-cors" });
-      } catch (e) {
-        console.log("Envío procesado a API");
-      }
-    }
-
-    function validarEnvio() {
-      const total = numerosSeleccionados.length;
-      if (total === 0) {
-        alert("🚨 ¡ATENCIÓN! Debes seleccionar al menos un combo de 4 números.");
-        return false;
-      }
-      if (total % 4 !== 0) {
-        const faltantes = 4 - (total % 4);
-        alert(`🚨 ¡COMBO INCOMPLETO! Debes seleccionar en grupos exactos de 4 números. Te falta(n) ${faltantes} número(s) para completar el último combo.`);
-        return false;
-      }
-      return true;
-    }
-
-    function copiarTexto() {
-      if (!validarEnvio()) return;
-      
-      const texto = document.getElementById('wsText').innerText;
-      navigator.clipboard.writeText(texto).then(() => {
-        alert('¡Texto de la compra copiado con éxito!');
-        registrarEnAPI();
-      });
-    }
-
-    function enviarWhatsApp() {
-      if (!validarEnvio()) return;
-
-      registrarEnAPI();
-      const texto = document.getElementById('wsText').innerText;
-      window.open(`https://wa.me/59167723609?text=${encodeURIComponent(texto)}`, '_blank');
-    }
-
-    // Inicializar
-    cargarNumerosDesdeAPI();
-    actualizarProgreso();
-  </script>
+    <script src="app.js"></script>
 </body>
-</html>

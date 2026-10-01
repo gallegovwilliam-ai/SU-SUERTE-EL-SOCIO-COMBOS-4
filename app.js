@@ -1,18 +1,13 @@
-// URL de publicación en la Web de tu Google Sheet (Lectura de datos)
+// URLs de configuración
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTx3ofaEsx5VvKJyfc7m709ObhI1AHG8zEHC6ppxrIKyG0tHKgT5K17pytj-th9YmGtBA6eZK-DiHmX/pub?output=csv';
-
-// URL de tu Google Apps Script (Escritura de datos)
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwjw-89xBPNckbtGHDQ8LUmN5hwdo4JDLM1OwIOl97d8zuD43Uk2GVuFcURXRZ8DnE/exec'; 
-
-// Número de WhatsApp para recibir los pedidos (sin + ni espacios)
 const TELEFONO_WHATSAPP = '59167723609';
 
 let numerosData = [];
-let seleccionados = [];
+let seleccionados = []; // Almacena todos los números seleccionados
 
 document.addEventListener('DOMContentLoaded', () => {
     cargarDatosDesdeGoogleSheets();
-    crearBotonWhatsApp();
 });
 
 function cargarDatosDesdeGoogleSheets() {
@@ -33,131 +28,129 @@ function cargarDatosDesdeGoogleSheets() {
             }).filter(item => item !== null);
 
             renderGrid(numerosData);
-            actualizarContadores();
+            actualizarResumen();
         })
         .catch(error => console.error('Error al cargar datos:', error));
 }
 
 function renderGrid(data) {
-    let gridContainer = document.getElementById('grid') || 
-                        document.getElementById('gridContainer') || 
-                        document.querySelector('.row.g-2') || 
-                        document.querySelector('.numbers-container') ||
-                        document.querySelector('.container .row');
-
-    if (!gridContainer) {
-        gridContainer = document.createElement('div');
-        gridContainer.id = 'gridContainer';
-        gridContainer.className = 'd-flex flex-wrap justify-content-center';
-        document.body.appendChild(gridContainer);
-    }
+    const gridContainer = document.getElementById('gridContainer');
+    if (!gridContainer) return;
 
     gridContainer.innerHTML = '';
 
     data.forEach(item => {
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.className = 'btn m-1 font-monospace';
-        btn.style.width = '75px';
-        btn.style.height = '45px';
         btn.innerText = item.numero;
 
         const estado = item.estado.toLowerCase();
 
-        if (estado === 'vendido') {
-            btn.className = 'btn btn-danger m-1 disabled';
-            btn.title = 'Vendido';
-        } else if (estado === 'apartado' || estado === 'reservado') {
-            btn.className = 'btn btn-warning m-1 disabled';
-            btn.style.backgroundColor = '#ff9800';
-            btn.style.color = '#fff';
-            btn.title = 'Apartado previa selección';
+        if (estado === 'vendido' || estado === 'ocupado' || estado === 'apartado') {
+            btn.className = 'btn btn-ocupado m-1';
+            btn.disabled = true;
         } else if (seleccionados.includes(item.numero)) {
-            btn.className = 'btn btn-success m-1 fw-bold';
-            btn.style.backgroundColor = '#28a745';
-            btn.style.color = '#fff';
+            btn.className = 'btn btn-seleccionado m-1';
+            btn.addEventListener('click', () => deseleccionarNumero(item.numero));
         } else {
-            btn.className = 'btn btn-outline-secondary m-1';
-            btn.addEventListener('click', () => toggleSeleccion(item.numero));
+            btn.className = 'btn btn-disponible m-1';
+            btn.addEventListener('click', () => seleccionarNumero(item.numero));
         }
 
         gridContainer.appendChild(btn);
     });
 }
 
-function toggleSeleccion(numero) {
-    const index = seleccionados.indexOf(numero);
-    if (index === -1) {
-        seleccionados.push(numero);
-    } else {
-        seleccionados.splice(index, 1);
-    }
+// LÓGICA DE SELECCIÓN INDIVIDUAL
+function seleccionarNumero(numero) {
+    seleccionados.push(numero);
     renderGrid(numerosData);
-    actualizarContadores();
-    actualizarBotonWhatsApp();
+    actualizarResumen();
 }
 
-function actualizarContadores() {
-    const total = numerosData.length;
-    const vendidos = numerosData.filter(i => i.estado.toLowerCase() === 'vendido').length;
-    const apartados = numerosData.filter(i => ['apartado', 'reservado'].includes(i.estado.toLowerCase())).length;
-    const seleccionadosCount = seleccionados.length;
-    const disponibles = total - vendidos - apartados - seleccionadosCount;
-
-    const elDisp = document.getElementById('disponibles') || document.querySelector('.card-body h3');
-    const elSel = document.getElementById('seleccionados');
-    const elVen = document.getElementById('vendidos');
-
-    if (elDisp) elDisp.innerText = disponibles;
-    if (elSel) elSel.innerText = seleccionadosCount;
-    if (elVen) elVen.innerText = vendidos;
+function deseleccionarNumero(numero) {
+    seleccionados = seleccionados.filter(num => num !== numero);
+    renderGrid(numerosData);
+    actualizarResumen();
 }
 
-function crearBotonWhatsApp() {
-    let btnWsp = document.getElementById('btnWhatsAppFloating');
-    if (!btnWsp) {
-        btnWsp = document.createElement('button');
-        btnWsp.id = 'btnWhatsAppFloating';
-        btnWsp.style.position = 'fixed';
-        btnWsp.style.bottom = '20px';
-        btnWsp.style.right = '20px';
-        btnWsp.style.backgroundColor = '#25D366';
-        btnWsp.style.color = '#FFF';
-        btnWsp.style.border = 'none';
-        btnWsp.style.padding = '12px 20px';
-        btnWsp.style.borderRadius = '30px';
-        btnWsp.style.boxShadow = '0px 4px 10px rgba(0,0,0,0.3)';
-        btnWsp.style.fontWeight = 'bold';
-        btnWsp.style.fontSize = '16px';
-        btnWsp.style.cursor = 'pointer';
-        btnWsp.style.zIndex = '9999';
-        btnWsp.style.display = 'none';
-        btnWsp.addEventListener('click', enviarYGuardarEnGoogleSheets);
-        document.body.appendChild(btnWsp);
+// BOTÓN COMBO RÁPIDO: Agrega 1 combo más (4 números disponibles al azar)
+function agregarCombo() {
+    const disponibles = numerosData
+        .filter(item => item.estado.toLowerCase() === 'disponible' && !seleccionados.includes(item.numero))
+        .map(item => item.numero);
+
+    if (disponibles.length < 4) {
+        alert('No hay suficientes números disponibles para completar un combo de 4.');
+        return;
     }
-    actualizarBotonWhatsApp();
+
+    // Selecciona 4 números aleatorios que no estén en la lista
+    const comboNuevo = [];
+    while (comboNuevo.length < 4) {
+        const randomIndex = Math.floor(Math.random() * disponibles.length);
+        const numElegido = disponibles.splice(randomIndex, 1)[0];
+        comboNuevo.push(numElegido);
+    }
+
+    seleccionados.push(...comboNuevo);
+    renderGrid(numerosData);
+    actualizarResumen();
 }
 
-function actualizarBotonWhatsApp() {
-    const btnWsp = document.getElementById('btnWhatsAppFloating');
-    if (!btnWsp) return;
+// ACTUALIZA EL PANEL LATERAL Y MOSTRAR LOS COMBOS ADQUIRIDOS
+function actualizarResumen() {
+    const totalNumeros = seleccionados.length;
+    const totalCombos = Math.floor(totalNumeros / 4);
 
-    if (seleccionados.length > 0) {
-        btnWsp.innerHTML = `📲 Apartar (${seleccionados.length}) por WhatsApp`;
-        btnWsp.style.display = 'block';
-    } else {
-        btnWsp.style.display = 'none';
+    const countBadge = document.getElementById('countSeleccionados');
+    if (countBadge) countBadge.innerText = `${totalNumeros} Números (${totalCombos} Combo${totalCombos !== 1 ? 's' : ''})`;
+
+    const containerBadges = document.getElementById('listaSeleccionadosBadges');
+    if (containerBadges) {
+        containerBadges.innerHTML = '';
+
+        if (totalNumeros === 0) {
+            containerBadges.innerHTML = '<span class="small text-secondary">Ningún combo seleccionado</span>';
+        } else {
+            // Muestra los números en grupos visuales de 4
+            for (let i = 0; i < totalNumeros; i += 4) {
+                const comboGrupo = seleccionados.slice(i, i + 4);
+                const badge = document.createElement('div');
+                badge.className = 'badge bg-warning text-dark p-2 me-1 mb-1 border border-dark';
+                badge.style.fontSize = '13px';
+                badge.innerText = `Combo ${Math.floor(i / 4) + 1}: [ ${comboGrupo.join(' - ')} ]`;
+                containerBadges.appendChild(badge);
+            }
+        }
     }
 }
 
+// ENVÍO DE DATOS A GOOGLE SHEETS Y WHATSAPP
 function enviarYGuardarEnGoogleSheets() {
-    if (seleccionados.length === 0) return;
+    if (seleccionados.length === 0) {
+        alert('Por favor selecciona al menos un combo de números.');
+        return;
+    }
 
-    const numerosTexto = seleccionados.join(', ');
-    const mensaje = encodeURIComponent(`Hola, deseo apartar los siguientes números para el sorteo: ${numerosTexto}`);
+    const totalCombos = Math.floor(seleccionados.length / 4);
+    const nombre = document.getElementById('txtNombre')?.value || 'Cliente';
+    const ciudad = document.getElementById('txtCiudad')?.value || 'No especificada';
+    const metodoPago = document.getElementById('selectPago')?.value || 'QR';
+
+    const textoNumeros = seleccionados.join(', ');
+    const mensaje = encodeURIComponent(
+        `¡Hola! Deseo confirmar mi participación en la rifa:\n\n` +
+        `👤 *Nombre:* ${nombre}\n` +
+        `📍 *Ciudad:* ${ciudad}\n` +
+        `💳 *Método de pago:* ${metodoPago}\n` +
+        `📦 *Combos:* ${totalCombos} (${seleccionados.length} números)\n` +
+        `🔢 *Números:* ${textoNumeros}`
+    );
+
     const whatsappUrl = `https://wa.me/${TELEFONO_WHATSAPP}?text=${mensaje}`;
 
-    // Envío de datos a Google Apps Script
+    // Envío a Google Apps Script para cambiar a "vendido"
     fetch(APPS_SCRIPT_URL, {
         method: 'POST',
         mode: 'no-cors',
@@ -170,8 +163,8 @@ function enviarYGuardarEnGoogleSheets() {
     // Abrir WhatsApp
     window.open(whatsappUrl, '_blank');
 
-    // Limpiar selección local y actualizar pantalla
+    // Limpiar selección local y actualizar
     seleccionados = [];
-    actualizarBotonWhatsApp();
+    actualizarResumen();
     setTimeout(cargarDatosDesdeGoogleSheets, 3000);
 }
