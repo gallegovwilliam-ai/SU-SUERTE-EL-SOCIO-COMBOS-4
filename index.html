@@ -37,7 +37,7 @@
 
     .container {
       width: 100%;
-      max-width: 650px;
+      max-width: 700px;
       background: var(--card-bg);
       border-radius: 20px;
       border: 2px solid var(--border-gold);
@@ -53,8 +53,8 @@
     }
 
     .logo-container {
-      width: 120px;
-      height: 120px;
+      width: 110px;
+      height: 110px;
       margin: 0 auto 15px auto;
       border-radius: 50%;
       border: 3px solid var(--gold-primary);
@@ -90,7 +90,7 @@
       padding: 25px;
     }
 
-    /* BARRA DE PROGRESO DE SELECCIÓN (ESTRICTO 4 NÚMEROS) */
+    /* BARRA DE PROGRESO DE MULTI-COMBOS */
     .progress-box {
       background: #0f172a;
       border: 1px solid var(--border-gold);
@@ -101,7 +101,7 @@
     }
 
     .progress-title {
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 700;
       color: var(--gold-light);
       margin-bottom: 8px;
@@ -127,7 +127,6 @@
       font-weight: 700;
       padding: 8px;
       border-radius: 6px;
-      display: none;
     }
 
     .alert-warning {
@@ -142,15 +141,50 @@
       border: 1px solid var(--success);
     }
 
-    /* Malla de números de ejemplo */
+    /* CONTROLES RÁPIDOS */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .btn-quick {
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      background: linear-gradient(90deg, var(--gold-dark), var(--gold-primary));
+      color: #000;
+      transition: transform 0.2s;
+    }
+
+    .btn-quick:hover {
+      transform: translateY(-2px);
+    }
+
+    /* MALLA DE NÚMEROS EXTENDIDA */
+    .numbers-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
     .numbers-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 10px;
       margin-bottom: 20px;
-      max-height: 180px;
+      max-height: 280px;
       overflow-y: auto;
       padding-right: 5px;
+      border: 1px solid #334155;
+      padding: 10px;
+      border-radius: 10px;
+      background: #090d16;
     }
 
     .num-card {
@@ -180,7 +214,7 @@
       text-decoration: line-through;
     }
 
-    /* CAMPOS DE DATOS */
+    /* FORMULARIO DE REGISTRO */
     .form-box {
       background: #0f172a;
       border: 1px dashed var(--border-gold);
@@ -233,7 +267,7 @@
       margin-top: 10px;
     }
 
-    /* BOTONES DE ACCIÓN */
+    /* BOTONES DE ENVÍO */
     .actions {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -259,13 +293,6 @@
       transform: translateY(-2px);
     }
 
-    .btn-quick {
-      grid-column: span 2;
-      background: linear-gradient(90deg, var(--gold-dark), var(--gold-primary));
-      color: #000;
-      margin-bottom: 10px;
-    }
-
     .btn-copy {
       background: #334155;
       color: var(--text-light);
@@ -286,32 +313,42 @@
         <img src="logo.png" onerror="this.onerror=null; this.src='logo.jpg';" alt="Logo Su Suerte El Socio">
       </div>
       <h1 class="title">Rifas El Socio - Combos 4</h1>
-      <p class="subtitle">Selecciona exactamente 4 números por boleta</p>
+      <p class="subtitle">Venta exclusiva en grupos de 4 números por combo</p>
     </div>
 
     <div class="content">
-      <!-- Indicador Estricto de 4 Números -->
+      <!-- Indicador Dinámico de Múltiples Combos -->
       <div class="progress-box">
-        <div class="progress-title" id="progressText">Seleccionados: 0 / 4 números</div>
+        <div class="progress-title" id="progressText">Seleccionados: 0 números (0 Combos)</div>
         <div class="progress-bar-bg">
           <div class="progress-bar-fill" id="progressBar"></div>
         </div>
-        <div id="alertBanner" class="alert-banner alert-warning" style="display: block;">
-          ⚠️ ¡Atención! Debes completar 4 números para poder enviar.
+        <div id="alertBanner" class="alert-banner alert-warning">
+          ⚠️ Selecciona al menos 4 números para armar tu primer combo.
         </div>
       </div>
 
-      <!-- Botón de Generación Rápida de Combos -->
-      <button class="btn btn-quick" onclick="generarComboAleatorio()">
-        🎲 Combo Rápido (4 Números Aleatorios)
-      </button>
-
-      <!-- Malla de Números Interactivas -->
-      <div class="numbers-grid" id="gridNumeros">
-        <!-- Se generan automáticamente vía JavaScript -->
+      <!-- Acciones de Selección Rápida de Combos -->
+      <div class="quick-actions">
+        <button class="btn-quick" onclick="agregarComboAleatorio(1)">
+          🎲 +1 Combo (4 Números)
+        </button>
+        <button class="btn-quick" onclick="agregarComboAleatorio(2)">
+          🎲🎲 +2 Combos (8 Números)
+        </button>
       </div>
 
-      <!-- Formulario de Datos -->
+      <div class="numbers-header">
+        <span style="font-size: 13px; color: var(--gold-light); font-weight: bold;">Lista de Números Disponibles:</span>
+        <button onclick="limpiarSeleccion()" style="background: none; border: none; color: var(--danger); font-size: 12px; cursor: pointer; text-decoration: underline;">Limpiar Selección</button>
+      </div>
+
+      <!-- Malla Extendida de Números -->
+      <div class="numbers-grid" id="gridNumeros">
+        <!-- Generado dinámicamente -->
+      </div>
+
+      <!-- Formulario de Registro -->
       <div class="form-box">
         <h3>✍️ DATOS DE REGISTRO DEL CLIENTE</h3>
 
@@ -331,10 +368,10 @@
         </div>
 
         <div style="font-size: 12px; color: var(--text-muted); margin-top: 10px;">Vista previa del mensaje:</div>
-        <div class="template-text" id="wsText">✍️ Registro de Combo Rápido</div>
+        <div class="template-text" id="wsText">✍️ Registro de Pedido</div>
       </div>
 
-      <!-- Botones de Envío -->
+      <!-- Botones de Acción -->
       <div class="actions">
         <button class="btn btn-copy" onclick="copiarTexto()">
           📋 Copiar Texto
@@ -349,19 +386,50 @@
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbzcZRtZ4gAB4EMwUZtV104dZevHuRkMcxjYYLeVQU1OFk4d5yzmZW0VSWbOz/exec";
     let numerosSeleccionados = [];
-    
-    // Lista de muestra inicial
-    const listaDemo = ["1024", "3052", "4108", "5512", "6809", "7211", "8430", "9105", "1122", "3344", "5566", "7788"];
+    let inventarioNumeros = {};
+
+    // Lista amplia inicial por defecto
+    let listaDisponible = [
+      "1024", "1025", "1026", "1027", "2048", "2049", "2050", "2051",
+      "3052", "3053", "3054", "3055", "4108", "4109", "4110", "4111",
+      "5512", "5513", "5514", "5515", "6809", "6810", "6811", "6812",
+      "7211", "7212", "7213", "7214", "8430", "8431", "8432", "8433",
+      "9105", "9106", "9107", "9108", "1122", "1123", "1124", "1125"
+    ];
+
+    async function cargarNumerosDesdeAPI() {
+      try {
+        const response = await fetch(`${API_URL}?action=getNumbers`);
+        const data = await response.json();
+        if (data && typeof data === 'object') {
+          inventarioNumeros = data;
+          listaDisponible = Object.keys(data);
+        }
+      } catch (e) {
+        console.log("Usando lista local predeterminada");
+      }
+      renderGrid();
+    }
 
     function renderGrid() {
       const grid = document.getElementById('gridNumeros');
       grid.innerHTML = '';
       
-      listaDemo.forEach(num => {
+      listaDisponible.forEach(num => {
         const card = document.createElement('div');
-        card.className = 'num-card' + (numerosSeleccionados.includes(num) ? ' selected' : '');
+        const estado = inventarioNumeros[num] || 'disponible';
+        const esVendido = estado === 'vendido';
+
+        card.className = 'num-card' + 
+          (numerosSeleccionados.includes(num) ? ' selected' : '') +
+          (esVendido ? ' sold' : '');
+          
         card.innerText = num;
-        card.onclick = () => seleccionarNumero(num);
+
+        if (!esVendido) {
+          card.onclick = () => seleccionarNumero(num);
+        }
+        
         grid.appendChild(card);
       });
     }
@@ -370,41 +438,59 @@
       if (numerosSeleccionados.includes(num)) {
         numerosSeleccionados = numerosSeleccionados.filter(n => n !== num);
       } else {
-        if (numerosSeleccionados.length >= 4) {
-          alert("⚠️ Ya has seleccionado 4 números. Para cambiar uno, deselecciona uno primero.");
-          return;
-        }
         numerosSeleccionados.push(num);
       }
       actualizarProgreso();
       renderGrid();
     }
 
-    function generarComboAleatorio() {
-      // Tomar 4 números al azar
-      const copia = [...listaDemo];
-      copia.sort(() => 0.5 - Math.random());
-      numerosSeleccionados = copia.slice(0, 4);
+    function agregarComboAleatorio(cantidadCombos) {
+      const numerosRequeridos = cantidadCombos * 4;
+      const disponibles = listaDisponible.filter(n => !numerosSeleccionados.includes(n) && inventarioNumeros[n] !== 'vendido');
+      
+      if (disponibles.length < numerosRequeridos) {
+        alert("⚠️ No hay suficientes números disponibles para agregar esa cantidad de combos.");
+        return;
+      }
+
+      disponibles.sort(() => 0.5 - Math.random());
+      const nuevos = disponibles.slice(0, numerosRequeridos);
+      numerosSeleccionados = [...numerosSeleccionados, ...nuevos];
+
+      actualizarProgreso();
+      renderGrid();
+    }
+
+    function limpiarSeleccion() {
+      numerosSeleccionados = [];
       actualizarProgreso();
       renderGrid();
     }
 
     function actualizarProgreso() {
-      const cantidad = numerosSeleccionados.length;
-      const porcentaje = (cantidad / 4) * 100;
-      
-      document.getElementById('progressBar').style.width = porcentaje + '%';
-      document.getElementById('progressText').innerText = `Seleccionados: ${cantidad} / 4 números`;
+      const total = numerosSeleccionados.length;
+      const combosCompletos = Math.floor(total / 4);
+      const sobrantes = total % 4;
+      const faltantes = sobrantes === 0 ? 0 : 4 - sobrantes;
+
+      document.getElementById('progressText').innerText = `Seleccionados: ${total} números (${combosCompletos} Combo${combosCompletos !== 1 ? 's' : ''} Completo${combosCompletos !== 1 ? 's' : ''})`;
 
       const banner = document.getElementById('alertBanner');
-      if (cantidad === 4) {
-        banner.className = "alert-banner alert-complete";
-        banner.innerText = "✅ ¡COMBO COMPLETO! Ya puedes realizar el envío.";
-        banner.style.display = "block";
-      } else {
+      const progressBar = document.getElementById('progressBar');
+
+      if (total === 0) {
+        progressBar.style.width = '0%';
         banner.className = "alert-banner alert-warning";
-        banner.innerText = `⚠️ Te faltan ${4 - cantidad} números para completar tu boleta.`;
-        banner.style.display = "block";
+        banner.innerText = "⚠️ Selecciona al menos 4 números para armar tu primer combo.";
+      } else if (sobrantes === 0) {
+        progressBar.style.width = '100%';
+        banner.className = "alert-banner alert-complete";
+        banner.innerText = `✅ ¡EXCELENTE! Tienes ${combosCompletos} combo(s) completo(s) de 4 números.`;
+      } else {
+        const porcentaje = (sobrantes / 4) * 100;
+        progressBar.style.width = porcentaje + '%';
+        banner.className = "alert-banner alert-warning";
+        banner.innerText = `⚠️ Te faltan ${faltantes} número(s) para completar el Combo #${combosCompletos + 1}.`;
       }
 
       actualizarTexto();
@@ -414,11 +500,23 @@
       const nombre = document.getElementById('nombre').value || '';
       const ciudad = document.getElementById('ciudad').value || '';
       const telefono = document.getElementById('telefono').value || '';
-      const comboStr = numerosSeleccionados.length > 0 ? numerosSeleccionados.join(' - ') : 'Ninguno';
+      
+      const total = numerosSeleccionados.length;
+      const combosCompletos = Math.floor(total / 4);
 
-      const mensaje = `✍️ REGISTRO DE COMBO (4 NÚMEROS):
+      // Agrupar visualmente de a 4 números por combo
+      let combosDetalle = '';
+      for (let i = 0; i < total; i += 4) {
+        const grupo = numerosSeleccionados.slice(i, i + 4);
+        combosDetalle += `\n   • Combo #${(i/4)+1}: [ ${grupo.join(' - ')} ]`;
+      }
 
-🎟️ Combo Seleccionado: [ ${comboStr} ]
+      if (total === 0) combosDetalle = '\n   • Ninguno';
+
+      const mensaje = `✍️ REGISTRO DE PEDIDO (RIFAS EL SOCIO):
+
+🎟️ Total Combos: ${combosCompletos} (${total} números)
+📋 Detalle de Combos:${combosDetalle}
 
 💎 Nombre: ${nombre}
 💎 Ciudad: ${ciudad}
@@ -446,8 +544,14 @@
     }
 
     function validarEnvio() {
-      if (numerosSeleccionados.length !== 4) {
-        alert("🚨 ¡ATENCIÓN! Debes seleccionar exactamente 4 números para poder completar el registro.");
+      const total = numerosSeleccionados.length;
+      if (total === 0) {
+        alert("🚨 ¡ATENCIÓN! Debes seleccionar al menos un combo de 4 números.");
+        return false;
+      }
+      if (total % 4 !== 0) {
+        const faltantes = 4 - (total % 4);
+        alert(`🚨 ¡COMBO INCOMPLETO! Debes seleccionar en grupos exactos de 4 números. Te falta(n) ${faltantes} número(s) para completar el último combo.`);
         return false;
       }
       return true;
@@ -458,7 +562,7 @@
       
       const texto = document.getElementById('wsText').innerText;
       navigator.clipboard.writeText(texto).then(() => {
-        alert('¡Texto del combo copiado con éxito!');
+        alert('¡Texto de la compra copiado con éxito!');
         registrarEnAPI();
       });
     }
@@ -472,7 +576,7 @@
     }
 
     // Inicializar
-    renderGrid();
+    cargarNumerosDesdeAPI();
     actualizarProgreso();
   </script>
 </body>
