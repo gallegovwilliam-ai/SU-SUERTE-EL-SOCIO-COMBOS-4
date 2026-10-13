@@ -10,46 +10,35 @@ body {
 }
 
 header {
+    width: 100%;
     text-align: center;
-    background: #fff;
-    padding-bottom: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    background: #ffffff;
+    padding: 10px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
+/* Control estricto de la imagen/logo para que no quede enorme */
+header img, 
 .banner-img {
     width: 100%;
-    max-height: 250px;
-    object-fit: cover;
+    max-width: 380px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    padding: 0 15px;
+    box-sizing: border-box;
+    object-fit: contain;
 }
 
-/* ==========================================
-   BOTONES DE INFORMACIÓN (GANADORES / PREMIO)
-   ========================================== */
-.botones-info-container {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin: 15px 10px;
-    flex-wrap: wrap;
+@media (max-width: 480px) {
+    header img, 
+    .banner-img {
+        max-width: 280px;
+    }
 }
-
-.btn-info {
-    padding: 10px 18px;
-    border: none;
-    border-radius: 25px;
-    font-weight: bold;
-    cursor: pointer;
-    font-size: 14px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    transition: transform 0.2s, background-color 0.2s;
-}
-
-.btn-info:hover {
-    transform: translateY(-2px);
-}
-
-.btn-ganadores { background-color: #ffc107; color: #000; }
-.btn-premio { background-color: #28a745; color: #fff; }
 
 /* ==========================================
    MODALES FIJOS Y BLOQUEO MÓVIL (ANTI-REBOTE)
@@ -99,14 +88,6 @@ body.modal-open {
     cursor: pointer;
     color: #666;
     font-weight: bold;
-}
-
-.modal-imagen-dinamica {
-    width: 100%;
-    max-height: 250px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-top: 10px;
 }
 
 /* ==========================================
