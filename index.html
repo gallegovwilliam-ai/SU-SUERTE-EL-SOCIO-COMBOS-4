@@ -3,94 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Su Suerte El Socio - Combos</title>
+    <title>Su Suerte El Socio - Combos 4</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-    <header>
-        <!-- Logo / Banner adaptado -->
+    <header class="header-logo-container">
+        <!-- Logo con dimensiones fijas responsivas para celular -->
         <img src="banner-bolivia.jpg" alt="Su Suerte El Socio" class="banner-img">
     </header>
 
-    <main>
-        <div class="main-container">
-            <!-- Sección de Selección de Números -->
-            <div class="seccion-numeros">
-                <div class="card-box">
-                    <h4><i>📍</i> Elige tus números para participar</h4>
-                    
-                    <div class="leyenda-estados">
-                        <span><i class="dot disponible"></i> Disponible</span>
-                        <span><i class="dot seleccionado"></i> Seleccionado</span>
-                        <span><i class="dot ocupado"></i> Ocupado</span>
-                    </div>
-
-                    <!-- Grilla de números -->
-                    <div id="grilla-numeros" class="grid-numeros">
-                        <!-- Tus números se cargan aquí dinámicamente -->
-                    </div>
-                </div>
+    <main class="main-content">
+        <!-- Tarjeta de Selección de Números -->
+        <div class="card-box">
+            <h4 class="titulo-seccion">📍 Elige tus números (Combos de 4)</h4>
+            
+            <div class="leyenda-estados">
+                <span><i class="dot disponible"></i> Disponible</span>
+                <span><i class="dot seleccionado"></i> Seleccionado</span>
             </div>
 
-            <!-- Sección de Datos y Pago -->
-            <div class="seccion-formulario">
-                <div class="card-box">
-                    <h5><i>📝</i> Completa tus datos</h5>
-                    <p>Revisa que tus datos sean correctos para continuar.</p>
-
-                    <div class="form-group">
-                        <input type="text" id="nombreUsuario" placeholder="Nombre y Apellido">
-                    </div>
-
-                    <div class="form-group">
-                        <input type="tel" id="telefonoUsuario" placeholder="Número de WhatsApp">
-                    </div>
-
-                    <div class="form-group">
-                        <select id="metodoPago">
-                            <option value="Banco Ganadero (QR)">Banco Ganadero (QR)</option>
-                            <option value="Tigo Money">Tigo Money</option>
-                            <option value="Efectivo / Transferencia">Efectivo / Transferencia</option>
-                        </select>
-                    </div>
-
-                    <!-- Resumen -->
-                    <div class="resumen-box">
-                        <div>
-                            <span>Resumen de selección:</span>
-                            <span id="cantidadNumerosTexto">0 Números</span>
-                        </div>
-                        <div>
-                            <span id="comboSeleccionadoTexto">Ningún combo seleccionado</span>
-                        </div>
-                    </div>
-
-                    <!-- Botón de Pago / Continuar -->
-                    <button onclick="abrirModalPago()" class="btn-pagar-principal">
-                        💳 Ver QR y Pagar Fácil
-                    </button>
-                </div>
+            <!-- Buscador para encontrar un número rápido -->
+            <div class="buscador-box">
+                <input type="text" id="inputBuscar" placeholder="Buscar número (ej: 0425)..." maxlength="4" onkeyup="buscarNumero()">
             </div>
+
+            <!-- Grilla de números -->
+            <div id="grilla-numeros" class="grid-numeros">
+                <!-- Se cargan por JavaScript -->
+            </div>
+        </div>
+
+        <!-- Tarjeta de Datos y Pago -->
+        <div class="card-box">
+            <h5 class="titulo-seccion">📝 Completa tus datos</h5>
+            
+            <div class="form-group">
+                <input type="text" id="nombreUsuario" placeholder="Nombre y Apellido" class="input-form">
+            </div>
+
+            <div class="form-group">
+                <input type="tel" id="telefonoUsuario" placeholder="Número de WhatsApp" class="input-form">
+            </div>
+
+            <div class="form-group">
+                <select id="metodoPago" class="input-form">
+                    <option value="Banco Ganadero (QR)">Banco Ganadero (QR)</option>
+                    <option value="Tigo Money">Tigo Money</option>
+                    <option value="Efectivo / Transferencia">Efectivo / Transferencia</option>
+                </select>
+            </div>
+
+            <div class="resumen-box">
+                <p><strong>Seleccionados:</strong> <span id="cantidadNumerosTexto">0 Números</span></p>
+                <div id="listaNumerosElegidos" class="lista-badge">Ninguno</div>
+            </div>
+
+            <button onclick="abrirModalPago()" class="btn-pagar-principal">
+                💳 Ver QR y Pagar Fácil
+            </button>
         </div>
     </main>
 
-    <!-- VENTANA MODAL PARA EL PAGO CON QR E INSTAGRAM -->
+    <!-- MODAL DE PAGO Y QR -->
     <div id="modalPago" class="modal-overlay" onclick="cerrarModalPago()">
-        <div class="modal-content pago-qr-container" onclick="event.stopPropagation()">
+        <div class="modal-content" onclick="event.stopPropagation()">
             <span class="close-btn" onclick="cerrarModalPago()">&times;</span>
             <h3>Escanea el QR para tu Pago</h3>
-            <p class="sub-pago">Realiza tu transferencia y envíanos el comprobante.</p>
+            <p class="sub-pago">Realiza tu transferencia y envíanos tu comprobante.</p>
             
-            <!-- Imagen del Código QR del Banco -->
             <img src="qr-banco.jpg" alt="QR Banco Ganadero" class="qr-imagen">
 
-            <!-- Botón directo a Instagram para ver ganadores, premios y comprobantes -->
             <div class="instagram-box">
-                <p>¡Consulta ganadores, premios y envíanos tu comprobante aquí!</p>
+                <p>¿Dudas, ganadores o premios? Visítanos:</p>
                 <a href="https://instagram.com/susuerteelsocio" target="_blank" rel="noopener noreferrer" class="btn-instagram">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 5px;"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-                    Visita @susuerteelsocio en Instagram
+                    📸 Abrir Instagram @susuerteelsocio
                 </a>
             </div>
         </div>
