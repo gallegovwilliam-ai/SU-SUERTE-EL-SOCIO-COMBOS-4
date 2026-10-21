@@ -2,7 +2,6 @@ let numerosSeleccionados = [];
 const TOTAL_NUMEROS = 10000;
 const WHATSAPP_NUMERO = "59167723609";
 
-// Cargar del 0000 al 9999 al abrir la página
 document.addEventListener("DOMContentLoaded", () => {
   const grid = document.getElementById("gridNumeros");
   if (!grid) return;
@@ -13,6 +12,11 @@ document.addEventListener("DOMContentLoaded", () => {
     html += `<div class="num-card" id="card-${numFormatted}" onclick="seleccionarNumero('${numFormatted}')">${numFormatted}</div>`;
   }
   grid.innerHTML = html;
+
+  // Escuchar cambios en los inputs para validar el botón en tiempo real
+  document.getElementById("inputNombre").addEventListener("input", actualizarInterfaz);
+  document.getElementById("inputCiudad").addEventListener("input", actualizarInterfaz);
+  document.getElementById("inputTelefono").addEventListener("input", actualizarInterfaz);
 });
 
 function seleccionarNumero(numero) {
@@ -35,6 +39,10 @@ function actualizarInterfaz() {
   const combosCompletos = Math.floor(total / 4);
   const faltantes = total % 4 === 0 ? 0 : 4 - (total % 4);
 
+  const nombre = document.getElementById("inputNombre").value.trim();
+  const ciudad = document.getElementById("inputCiudad").value.trim();
+  const telefono = document.getElementById("inputTelefono").value.trim();
+
   const containerSeleccion = document.getElementById("selectedNumbersContainer");
   if (containerSeleccion) {
     if (total === 0) {
@@ -49,15 +57,20 @@ function actualizarInterfaz() {
 
   if (!btnWs || !status) return;
 
-  if (combosCompletos > 0 && faltantes === 0) {
-    btnWs.classList.remove("disabled");
-    status.innerHTML = `🎉 ¡Llevas <strong>${combosCompletos} Combo(s) x4</strong> (${total} números en total)!`;
-  } else if (combosCompletos > 0 && faltantes > 0) {
+  const datosCompletos = nombre !== "" && ciudad !== "" && telefono !== "";
+
+  if (!datosCompletos) {
     btnWs.classList.add("disabled");
-    status.innerHTML = `Llevas ${combosCompletos} combo(s). Elige <strong>${faltantes} número(s) más</strong> para completar otro combo.`;
+    status.innerHTML = "⚠️ Por favor, llena tu <strong>Nombre, Ciudad y Teléfono</strong>.";
+  } else if (combosCompletos === 0) {
+    btnWs.classList.add("disabled");
+    status.innerHTML = `Te faltan <strong>${4 - total} números</strong> para completar tu primer combo x4.`;
+  } else if (faltantes > 0) {
+    btnWs.classList.add("disabled");
+    status.innerHTML = `Llevas ${combosCompletos} combo(s). Elige <strong>${faltantes} número(s) más</strong> para completar el combo.`;
   } else {
-    btnWs.classList.add("disabled");
-    status.innerHTML = `Seleccionados: ${total} de 4. ¡Te faltan <strong>${4 - total} números</strong> para tu primer combo!`;
+    btnWs.classList.remove("disabled");
+    status.innerHTML = `🎉 ¡Todo listo! Llevas <strong>${combosCompletos} Combo(s) x4</strong>.`;
   }
 }
 
@@ -87,7 +100,11 @@ function limpiarSeleccion() {
 function enviarWhatsApp(e) {
   e.preventDefault();
   const total = numerosSeleccionados.length;
-  if (total === 0 || total % 4 !== 0) return;
+  const nombre = document.getElementById("inputNombre").value.trim();
+  const ciudad = document.getElementById("inputCiudad").value.trim();
+  const telefono = document.getElementById("inputTelefono").value.trim();
+
+  if (total === 0 || total % 4 !== 0 || !nombre || !ciudad || !telefono) return;
 
   const cantidadCombos = total / 4;
   let mensajeCombos = "";
@@ -96,7 +113,7 @@ function enviarWhatsApp(e) {
     mensajeCombos += `🎟️ *Combo #${(i/4) + 1}:* ${combo}%0A`;
   }
 
-  const mensaje = `Hola! Quiero confirmar mi compra en Su Suerte El Socio.%0A%0A🔥 *Total Combos x4:* ${cantidadCombos}%0A${mensajeCombos}%0A💳 Realizaré el pago por Banco Ganadero. Adjunto mi comprobante.`;
+  const mensaje = `Hola! Quiero registrar mi compra en Su Suerte El Socio.%0A%0A👤 *Nombre:* ${nombre}%0A📍 *Ciudad:* ${ciudad}%0A📱 *Teléfono:* ${telefono}%0A%0A🔥 *Total Combos x4:* ${cantidadCombos}%0A${mensajeCombos}%0A💳 Realicé mi pago por Banco Ganadero. Adjunto mi comprobante.`;
   
   const url = `https://wa.me/${WHATSAPP_NUMERO}?text=${mensaje}`;
   window.open(url, "_blank");
