@@ -3,60 +3,63 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Su Suerte El Socio - Mega Combo x4</title>
+  <title>Su Suerte El Socio - Mega Combo Bolivia x4</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- BANNER SUPERIOR -->
+  <!-- BANNER SUPERIOR OFICIAL -->
   <header class="banner-container">
     <img src="banner.jfif" alt="Mega Combo Bolivia - Su Suerte El Socio" class="banner-img">
   </header>
 
   <main class="container">
-    <h2>🎯 SELECCIONA TU COMBO DE 4 NÚMEROS (0000 - 9999)</h2>
-    <p class="subtitle">¡Escoge 4 números o genera un combo automático para multiplicar tus posibilidades!</p>
+    <h2>🎯 SELECCIONA TUS COMBOS DE 4 NÚMEROS (0000 - 9999)</h2>
+    <p class="subtitle">¡Elige múltiplos de 4 números o genera combos automáticos para multiplicar tus posibilidades de ganar!</p>
 
-    <!-- RESUMEN DE SELECCIÓN -->
+    <!-- CAJA Y RESUMEN DE SELECCIÓN DE COMBOS -->
     <div class="combo-box">
-      <h3>Tus 4 Números Seleccionados:</h3>
-      <div class="selected-numbers">
-        <span id="num1">____</span>
-        <span id="num2">____</span>
-        <span id="num3">____</span>
-        <span id="num4">____</span>
+      <h3>Tus Números Seleccionados:</h3>
+      
+      <!-- Visor dinámico de números seleccionados -->
+      <div id="selectedNumbersContainer" class="selected-numbers-container">
+        <p class="placeholder-text">Toca números abajo para armar tus combos</p>
       </div>
-      <button onclick="generarComboAleatorio()" class="btn-random">🎲 Generar Combo Aleatorio x4</button>
+
+      <!-- Botones de Acción -->
+      <div class="combo-actions">
+        <button onclick="generarComboAleatorio()" class="btn-random">🎲 Agregar Combo Aleatorio (+4)</button>
+        <button onclick="limpiarSeleccion()" class="btn-clear">🗑️ Limpiar Todo</button>
+      </div>
     </div>
 
-    <!-- SECCIÓN DE PAGO (BANCO GANADERO) -->
+    <!-- SECCIÓN DE PAGO CON QR (BANCO GANADERO) -->
     <div class="qr-container">
       <h3>💳 OPCIÓN DE PAGO RÁPIDO</h3>
-      <p>Escanea el código QR de **Banco Ganadero** para realizar tu pago:</p>
+      <p>Escanea el código QR de <strong>Banco Ganadero</strong> para realizar tu transferencia:</p>
       <div class="qr-box">
-        <!-- Reemplaza qr-banco-ganadero.png con la imagen real de tu QR -->
-        <img src="qr-banco-ganadero.png" alt="QR Banco Ganadero Su Suerte El Socio" class="qr-img">
+        <img src="qr-banco-ganadero.png" alt="QR Banco Ganadero - Su Suerte El Socio" class="qr-img">
       </div>
-      <p class="qr-instructions">📌 **Nota:** Guarda el comprobante para adjuntarlo en el mensaje de WhatsApp.</p>
+      <p class="qr-instructions">📌 <strong>Importante:</strong> Guarda el comprobante de pago para adjuntarlo en tu mensaje de WhatsApp.</p>
     </div>
 
-    <!-- BÚSQUEDA Y NÚMEROS -->
+    <!-- BÚSQUEDA Y GRILLA DE 10,000 NÚMEROS -->
     <div class="search-box">
-      <input type="text" id="searchInput" placeholder="Buscar número (ej. 0421)..." onkeyup="filtrarNumeros()">
+      <input type="text" id="searchInput" placeholder="🔍 Buscar número específico (ej. 0421)..." onkeyup="filtrarNumeros()">
     </div>
 
     <div id="gridNumeros" class="grid-container">
-      <!-- Los 10,000 números se cargan automáticamente desde JavaScript -->
+      <!-- Carga dinámica del 0000 al 9999 desde app.js -->
     </div>
   </main>
 
-  <!-- BOTÓN FLOTANTE DE WHATSAPP (FIJO EN LA PANTALLA) -->
+  <!-- BOTÓN FLOTANTE DE WHATSAPP (FIJO EN LA PANTALLA PARA CELULARES) -->
   <div class="floating-whatsapp-bar">
     <div class="whatsapp-info">
-      <span id="whatsappStatus">Selecciona 4 números</span>
+      <span id="whatsappStatus">Selecciona al menos 4 números para armar tu combo</span>
     </div>
     <a id="btnWhatsapp" href="#" class="btn-whatsapp disabled" onclick="enviarWhatsApp(event)">
-      💬 Confirmar Combo por WhatsApp
+      💬 Confirmar Pedido por WhatsApp
     </a>
   </div>
 
