@@ -1,18 +1,12 @@
-¡Excelente idea! Permitir que el cliente compre múltiples combos x4 en la misma transacción incrementará el valor medio de cada compra y les dará aún más oportunidades de ganar.
-
-Para implementar esto en tu código, la lógica cambiará para que la selección se gestione en módulos o paquetes de 4 en 4 (ejemplo: 4 números = 1 combo, 8 números = 2 combos, 12 números = 3 combos, etc.). El botón flotante de WhatsApp indicará exactamente cuántos combos lleva acumulados el usuario.
-
-Código Actualizado para Permitir Varios Combos
-Reemplaza la lógica en tu archivo app.js (y ajusta el mensaje en index.html) con la siguiente versión:
-
-1. Lógica JavaScript (app.js)
-JavaScript
 let numerosSeleccionados = [];
 const TOTAL_NUMEROS = 10000;
 const WHATSAPP_NUMERO = "59167723609";
 
+// Cargar del 0000 al 9999 al abrir la página
 document.addEventListener("DOMContentLoaded", () => {
   const grid = document.getElementById("gridNumeros");
+  if (!grid) return;
+  
   let html = "";
   for (let i = 0; i < TOTAL_NUMEROS; i++) {
     let numFormatted = String(i).padStart(4, '0');
@@ -25,13 +19,13 @@ function seleccionarNumero(numero) {
   const index = numerosSeleccionados.indexOf(numero);
   
   if (index > -1) {
-    // Deseleccionar
     numerosSeleccionados.splice(index, 1);
-    document.getElementById(`card-${numero}`).classList.remove("selected");
+    const el = document.getElementById(`card-${numero}`);
+    if (el) el.classList.remove("selected");
   } else {
-    // Seleccionar sin límite (múltiples combos)
     numerosSeleccionados.push(numero);
-    document.getElementById(`card-${numero}`).classList.add("selected");
+    const el = document.getElementById(`card-${numero}`);
+    if (el) el.classList.add("selected");
   }
   actualizarInterfaz();
 }
@@ -53,6 +47,8 @@ function actualizarInterfaz() {
   const btnWs = document.getElementById("btnWhatsapp");
   const status = document.getElementById("whatsappStatus");
 
+  if (!btnWs || !status) return;
+
   if (combosCompletos > 0 && faltantes === 0) {
     btnWs.classList.remove("disabled");
     status.innerHTML = `🎉 ¡Llevas <strong>${combosCompletos} Combo(s) x4</strong> (${total} números en total)!`;
@@ -66,7 +62,6 @@ function actualizarInterfaz() {
 }
 
 function generarComboAleatorio() {
-  // Añadir 4 números aleatorios a los ya seleccionados
   let nuevosNumeros = 0;
   while (nuevosNumeros < 4) {
     let randomNum = String(Math.floor(Math.random() * TOTAL_NUMEROS)).padStart(4, '0');
@@ -95,8 +90,6 @@ function enviarWhatsApp(e) {
   if (total === 0 || total % 4 !== 0) return;
 
   const cantidadCombos = total / 4;
-  
-  // Agrupar los números en bloques de 4 para el mensaje de WhatsApp
   let mensajeCombos = "";
   for (let i = 0; i < total; i += 4) {
     const combo = numerosSeleccionados.slice(i, i + 4).join(" - ");
@@ -107,4 +100,16 @@ function enviarWhatsApp(e) {
   
   const url = `https://wa.me/${WHATSAPP_NUMERO}?text=${mensaje}`;
   window.open(url, "_blank");
+}
+
+function filtrarNumeros() {
+  const query = document.getElementById("searchInput").value.toLowerCase();
+  const cards = document.querySelectorAll(".num-card");
+  cards.forEach(card => {
+    if (card.innerText.includes(query)) {
+      card.style.display = "block";
+    } else {
+      card.style.display = "none";
+    }
+  });
 }
