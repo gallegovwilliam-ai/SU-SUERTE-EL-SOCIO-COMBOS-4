@@ -1,8 +1,12 @@
 {
-  "rifa": "Su Suerte El Socio",
-  "tickets": [
-    { "number": "0000", "status": "available", "buyer": "" },
-    { "number": "0001", "status": "available", "buyer": "" },
-    { "number": "0002", "status": "available", "buyer": "" }
-  ]
+  "cliente": {
+    "nombre": "Nombre del Comprador",
+    "whatsapp": "+59167723609"
+  },
+  "combo_seleccionado": {
+    "tipo": "Combo x4",
+    "numeros": ["0123", "1425", "5890", "9999"],
+    "total_numeros": 4,
+    "estado": "Reservado"
+  }
 }
