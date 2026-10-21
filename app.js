@@ -9,12 +9,10 @@ document.addEventListener("DOMContentLoaded", () => {
   let html = "";
   for (let i = 0; i < TOTAL_NUMEROS; i++) {
     let numFormatted = String(i).padStart(4, '0');
-    // Se incluye ontouchend y onclick para compatibilidad total con pantallas táctiles de celulares
     html += `<div class="num-card" id="card-${numFormatted}" ontouchend="seleccionarNumero('${numFormatted}'); event.preventDefault();" onclick="seleccionarNumero('${numFormatted}')">${numFormatted}</div>`;
   }
   grid.innerHTML = html;
 
-  // Escuchar cambios en los inputs para validar el botón en tiempo real
   document.getElementById("inputNombre").addEventListener("input", actualizarInterfaz);
   document.getElementById("inputCiudad").addEventListener("input", actualizarInterfaz);
   document.getElementById("inputTelefono").addEventListener("input", actualizarInterfaz);
