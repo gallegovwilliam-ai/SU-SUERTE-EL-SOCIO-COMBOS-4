@@ -1,16 +1,65 @@
-<div style="border: 2px solid #e67e22; border-radius: 12px; padding: 20px; text-align: center; background-color: #fff8f0; max-width: 450px; margin: auto;">
-  <h2 style="color: #d35400; margin-top: 0;">🔥 PROMO COMBO X4 🔥</h2>
-  <p style="font-size: 16px;">¡Multiplica por 4 tus posibilidades de ganar!</p>
-  <p style="font-weight: bold; color: #2c3e50;">Selecciona 4 números entre el 0000 y el 9999:</p>
-  
-  <div style="display: flex; justify-content: center; gap: 8px; margin: 15px 0;">
-    <input type="text" maxlength="4" placeholder="0000" style="width: 60px; text-align: center; padding: 8px; font-weight: bold; border-radius: 5px; border: 1px solid #ccc;">
-    <input type="text" maxlength="4" placeholder="0000" style="width: 60px; text-align: center; padding: 8px; font-weight: bold; border-radius: 5px; border: 1px solid #ccc;">
-    <input type="text" maxlength="4" placeholder="0000" style="width: 60px; text-align: center; padding: 8px; font-weight: bold; border-radius: 5px; border: 1px solid #ccc;">
-    <input type="text" maxlength="4" placeholder="0000" style="width: 60px; text-align: center; padding: 8px; font-weight: bold; border-radius: 5px; border: 1px solid #ccc;">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Su Suerte El Socio - Mega Combo x4</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- BANNER SUPERIOR -->
+  <header class="banner-container">
+    <img src="banner.jfif" alt="Mega Combo Bolivia - Su Suerte El Socio" class="banner-img">
+  </header>
+
+  <main class="container">
+    <h2>🎯 SELECCIONA TU COMBO DE 4 NÚMEROS (0000 - 9999)</h2>
+    <p class="subtitle">¡Escoge 4 números o genera un combo automático para multiplicar tus posibilidades!</p>
+
+    <!-- RESUMEN DE SELECCIÓN -->
+    <div class="combo-box">
+      <h3>Tus 4 Números Seleccionados:</h3>
+      <div class="selected-numbers">
+        <span id="num1">____</span>
+        <span id="num2">____</span>
+        <span id="num3">____</span>
+        <span id="num4">____</span>
+      </div>
+      <button onclick="generarComboAleatorio()" class="btn-random">🎲 Generar Combo Aleatorio x4</button>
+    </div>
+
+    <!-- SECCIÓN DE PAGO (BANCO GANADERO) -->
+    <div class="qr-container">
+      <h3>💳 OPCIÓN DE PAGO RÁPIDO</h3>
+      <p>Escanea el código QR de **Banco Ganadero** para realizar tu pago:</p>
+      <div class="qr-box">
+        <!-- Reemplaza qr-banco-ganadero.png con la imagen real de tu QR -->
+        <img src="qr-banco-ganadero.png" alt="QR Banco Ganadero Su Suerte El Socio" class="qr-img">
+      </div>
+      <p class="qr-instructions">📌 **Nota:** Guarda el comprobante para adjuntarlo en el mensaje de WhatsApp.</p>
+    </div>
+
+    <!-- BÚSQUEDA Y NÚMEROS -->
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Buscar número (ej. 0421)..." onkeyup="filtrarNumeros()">
+    </div>
+
+    <div id="gridNumeros" class="grid-container">
+      <!-- Los 10,000 números se cargan automáticamente desde JavaScript -->
+    </div>
+  </main>
+
+  <!-- BOTÓN FLOTANTE DE WHATSAPP (FIJO EN LA PANTALLA) -->
+  <div class="floating-whatsapp-bar">
+    <div class="whatsapp-info">
+      <span id="whatsappStatus">Selecciona 4 números</span>
+    </div>
+    <a id="btnWhatsapp" href="#" class="btn-whatsapp disabled" onclick="enviarWhatsApp(event)">
+      💬 Confirmar Combo por WhatsApp
+    </a>
   </div>
 
-  <a href="https://wa.me/59167723609" target="_blank" style="background-color: #25D366; color: white; padding: 12px 20px; text-decoration: none; border-radius: 25px; font-weight: bold; display: inline-block; margin-top: 10px;">
-    📲 Confirmar Combo por WhatsApp
-  </a>
-</div>
+  <script src="app.js"></script>
+</body>
+</html>
