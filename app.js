@@ -9,7 +9,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let html = "";
   for (let i = 0; i < TOTAL_NUMEROS; i++) {
     let numFormatted = String(i).padStart(4, '0');
-    html += `<div class="num-card" id="card-${numFormatted}" onclick="seleccionarNumero('${numFormatted}')">${numFormatted}</div>`;
+    // Se incluye ontouchend y onclick para compatibilidad total con pantallas táctiles de celulares
+    html += `<div class="num-card" id="card-${numFormatted}" ontouchend="seleccionarNumero('${numFormatted}'); event.preventDefault();" onclick="seleccionarNumero('${numFormatted}')">${numFormatted}</div>`;
   }
   grid.innerHTML = html;
 
