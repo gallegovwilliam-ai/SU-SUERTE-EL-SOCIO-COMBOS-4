@@ -35,8 +35,6 @@ function seleccionarNumero(numero) {
 
 function actualizarInterfaz() {
   const total = numerosSeleccionados.length;
-  const combosCompletos = Math.floor(total / 4);
-  const faltantes = total % 4 === 0 ? 0 : 4 - (total % 4);
 
   const nombre = document.getElementById("inputNombre").value.trim();
   const ciudad = document.getElementById("inputCiudad").value.trim();
@@ -45,7 +43,7 @@ function actualizarInterfaz() {
   const containerSeleccion = document.getElementById("selectedNumbersContainer");
   if (containerSeleccion) {
     if (total === 0) {
-      containerSeleccion.innerHTML = "<p class='placeholder-text'>Toca números para armar tus combos</p>";
+      containerSeleccion.innerHTML = "<p class='placeholder-text'>Toca números abajo para seleccionarlos</p>";
     } else {
       containerSeleccion.innerHTML = numerosSeleccionados.map(num => `<span class="badge-num">${num}</span>`).join(" ");
     }
@@ -61,15 +59,12 @@ function actualizarInterfaz() {
   if (!datosCompletos) {
     btnWs.classList.add("disabled");
     status.innerHTML = "⚠️ Por favor, llena tu <strong>Nombre, Ciudad y Teléfono</strong>.";
-  } else if (combosCompletos === 0) {
+  } else if (total === 0) {
     btnWs.classList.add("disabled");
-    status.innerHTML = `Te faltan <strong>${4 - total} números</strong> para completar tu primer combo x4.`;
-  } else if (faltantes > 0) {
-    btnWs.classList.add("disabled");
-    status.innerHTML = `Llevas ${combosCompletos} combo(s). Elige <strong>${faltantes} número(s) más</strong> para completar el combo.`;
+    status.innerHTML = "Selecciona al menos <strong>1 número</strong> para continuar.";
   } else {
     btnWs.classList.remove("disabled");
-    status.innerHTML = `🎉 ¡Todo listo! Llevas <strong>${combosCompletos} Combo(s) x4</strong>.`;
+    status.innerHTML = `🎉 ¡Listo! Has seleccionado <strong>${total} número(s)</strong>.`;
   }
 }
 
@@ -103,16 +98,12 @@ function enviarWhatsApp(e) {
   const ciudad = document.getElementById("inputCiudad").value.trim();
   const telefono = document.getElementById("inputTelefono").value.trim();
 
-  if (total === 0 || total % 4 !== 0 || !nombre || !ciudad || !telefono) return;
+  if (total === 0 || !nombre || !ciudad || !telefono) return;
 
-  const cantidadCombos = total / 4;
-  let mensajeCombos = "";
-  for (let i = 0; i < total; i += 4) {
-    const combo = numerosSeleccionados.slice(i, i + 4).join(" - ");
-    mensajeCombos += `🎟️ *Combo #${(i/4) + 1}:* ${combo}%0A`;
-  }
+  // Formatear la lista de números seleccionados
+  const listaNumeros = numerosSeleccionados.join(", ");
 
-  const mensaje = `Hola! Quiero registrar mi compra en Su Suerte El Socio.%0A%0A👤 *Nombre:* ${nombre}%0A📍 *Ciudad:* ${ciudad}%0A📱 *Teléfono:* ${telefono}%0A%0A🔥 *Total Combos x4:* ${cantidadCombos}%0A${mensajeCombos}%0A💳 Realicé mi pago por Banco Ganadero. Adjunto mi comprobante.`;
+  const mensaje = `Hola! Quiero registrar mi compra en Su Suerte El Socio.%0A%0A👤 *Nombre:* ${nombre}%0A📍 *Ciudad:* ${ciudad}%0A📱 *Teléfono:* ${telefono}%0A%0A🎟️ *Mis Números Seleccionados (${total}):*%0A${listaNumeros}%0A%0A💳 Realicé mi pago por Banco Ganadero. Adjunto mi comprobante.`;
   
   const url = `https://wa.me/${WHATSAPP_NUMERO}?text=${mensaje}`;
   window.open(url, "_blank");

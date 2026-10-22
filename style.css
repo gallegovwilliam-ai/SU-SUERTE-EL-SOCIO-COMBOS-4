@@ -11,14 +11,24 @@ body {
   padding-bottom: 120px;
 }
 
-.banner-container img {
-  width: 100%;
-  max-width: 600px;
-  display: block;
-  margin: 0 auto;
+.banner-container {
+  text-align: center;
+  padding: 15px 0;
+  background: #111;
 }
 
-/* SECCIÓN DE REDES SOCIALES */
+.banner-container img {
+  width: 160px;
+  height: 160px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+  border-radius: 50%;
+  box-shadow: 0 4px 20px rgba(243, 156, 18, 0.4);
+  border: 2px solid #f39c12;
+}
+
+/* SECCIÓN DE REDES SOCIALES Y GANADORES */
 .social-bar {
   background: #181818;
   padding: 12px 10px;
@@ -58,6 +68,7 @@ body {
   transform: scale(0.95);
 }
 
+.winners { background: #d35400; border: 1px solid #e67e22; }
 .facebook { background: #1877f2; }
 .tiktok { background: #000; border: 1px solid #333; }
 .instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
@@ -286,4 +297,3 @@ h2 {
   pointer-events: none;
   opacity: 0.6;
 }
-3.
